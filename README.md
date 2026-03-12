@@ -1,111 +1,183 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <title>Aplikasi Kas</title>
-  <style>
-    body { font-family: Arial; padding: 20px; }
-    input, select, button {
-      padding: 8px;
-      margin: 5px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
-    table, th, td {
-      border: 1px solid black;
-    }
-    th, td {
-      padding: 8px;
-      text-align: center;
-    }
-    .logout {
-      background: red;
-      color: white;
-      border: none;
-      padding: 8px;
-      float: right;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Buku Kas Online</title>
+
+<style>
+body{
+    font-family: Arial;
+    background:#f4f6f9;
+    padding:20px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+h2{
+    text-align:center;
+}
+
+input,select,button{
+    padding:8px;
+    margin:5px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+}
+
+table,th,td{
+    border:1px solid #ccc;
+}
+
+th,td{
+    padding:10px;
+    text-align:center;
+}
+
+.pemasukan{
+    color:green;
+}
+
+.pengeluaran{
+    color:red;
+}
+
+.saldo{
+    font-size:20px;
+    font-weight:bold;
+    text-align:right;
+}
+</style>
 </head>
+
 <body>
 
-<script>
-  if (localStorage.getItem("login") !== "true") {
-    window.location.href = "index.html";
-  }
-</script>
+<div class="container">
 
-<button class="logout" onclick="logout()">Logout</button>
-<h2>Aplikasi Kas</h2>
-
-<h3>Saldo: Rp <span id="saldo">0</span></h3>
+<h2>Buku Kas Online</h2>
 
 <input type="date" id="tanggal">
 <input type="text" id="keterangan" placeholder="Keterangan">
 <input type="number" id="jumlah" placeholder="Jumlah">
-<select id="jenis">
-  <option value="masuk">Pemasukan</option>
-  <option value="keluar">Pengeluaran</option>
+
+<select id="tipe">
+<option value="pemasukan">Pemasukan</option>
+<option value="pengeluaran">Pengeluaran</option>
 </select>
-<button onclick="tambahKas()">Simpan</button>
+
+<button onclick="tambahData()">Simpan</button>
+
+<h3>Saldo: Rp <span id="saldo">0</span></h3>
 
 <table>
-  <thead>
-    <tr>
-      <th>Tanggal</th>
-      <th>Keterangan</th>
-      <th>Masuk</th>
-      <th>Keluar</th>
-    </tr>
-  </thead>
-  <tbody id="dataKas"></tbody>
+<thead>
+<tr>
+<th>Tanggal</th>
+<th>Keterangan</th>
+<th>Pemasukan</th>
+<th>Pengeluaran</th>
+<th>Aksi</th>
+</tr>
+</thead>
+
+<tbody id="tabelKas">
+</tbody>
 </table>
 
+</div>
+
 <script>
-  let kas = JSON.parse(localStorage.getItem("kas")) || [];
 
-  function render() {
-    let saldo = 0;
-    let html = "";
+let dataKas = JSON.parse(localStorage.getItem("kas")) || [];
 
-    kas.forEach(k => {
-      if (k.jenis === "masuk") saldo += k.jumlah;
-      else saldo -= k.jumlah;
+function tampilData(){
 
-      html += `
-        <tr>
-          <td>${k.tanggal}</td>
-          <td>${k.keterangan}</td>
-          <td>${k.jenis === "masuk" ? k.jumlah : ""}</td>
-          <td>${k.jenis === "keluar" ? k.jumlah : ""}</td>
-        </tr>
-      `;
-    });
+let tabel = document.getElementById("tabelKas");
+tabel.innerHTML = "";
 
-    document.getElementById("dataKas").innerHTML = html;
-    document.getElementById("saldo").innerText = saldo.toLocaleString();
-    localStorage.setItem("kas", JSON.stringify(kas));
-  }
+let saldo = 0;
 
-  function tambahKas() {
-    kas.push({
-      tanggal: tanggal.value,
-      keterangan: keterangan.value,
-      jumlah: parseInt(jumlah.value),
-      jenis: jenis.value
-    });
-    render();
-  }
+dataKas.forEach((data,index)=>{
 
-  function logout() {
-    localStorage.removeItem("login");
-    window.location.href = "index.html";
-  }
+let pemasukan = "";
+let pengeluaran = "";
 
-  render();
+if(data.tipe=="pemasukan"){
+pemasukan = data.jumlah;
+saldo += parseInt(data.jumlah);
+}else{
+pengeluaran = data.jumlah;
+saldo -= parseInt(data.jumlah);
+}
+
+tabel.innerHTML += `
+<tr>
+<td>${data.tanggal}</td>
+<td>${data.keterangan}</td>
+<td class="pemasukan">${pemasukan}</td>
+<td class="pengeluaran">${pengeluaran}</td>
+<td>
+<button onclick="hapusData(${index})">Hapus</button>
+</td>
+</tr>
+`;
+
+});
+
+document.getElementById("saldo").innerText = saldo;
+
+}
+
+function tambahData(){
+
+let tanggal = document.getElementById("tanggal").value;
+let keterangan = document.getElementById("keterangan").value;
+let jumlah = document.getElementById("jumlah").value;
+let tipe = document.getElementById("tipe").value;
+
+if(tanggal=="" || keterangan=="" || jumlah==""){
+alert("Isi semua data");
+return;
+}
+
+dataKas.push({
+tanggal:tanggal,
+keterangan:keterangan,
+jumlah:jumlah,
+tipe:tipe
+});
+
+localStorage.setItem("kas",JSON.stringify(dataKas));
+
+tampilData();
+
+document.getElementById("keterangan").value="";
+document.getElementById("jumlah").value="";
+
+}
+
+function hapusData(index){
+
+dataKas.splice(index,1);
+
+localStorage.setItem("kas",JSON.stringify(dataKas));
+
+tampilData();
+
+}
+
+tampilData();
+
 </script>
 
 </body>

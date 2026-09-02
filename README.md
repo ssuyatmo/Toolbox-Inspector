@@ -224,10 +224,18 @@
             <h2>Informasi Pemeriksaan</h2>
             <div class="form-group">
                 <label>Nama Mekanik</label>
+                <select id="NamaMekanik">
+                <option value="SUYATMO"</option>
+                    <option value="ACHMAD MIRZA"</option>
+                    <option value="ENRICO ATHA NARESWARA"</option>
+                </select>
                 <input type="text" id="namaMekanik" placeholder="Contoh: Ahmad">
             </div>
             <div class="form-group">
                 <label>No. Tool Box</label>
+                <select id="ToolBo">
+                    <option value="BOX 05"</option>
+                </select>
                 <input type="text" id="noToolbox" placeholder="Contoh: TB-01">
             </div>
             <div class="form-group">

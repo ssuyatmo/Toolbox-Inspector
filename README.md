@@ -234,6 +234,15 @@
                 <input type="date" id="tglInspeksi">
             </div>
 
+            <!-- Shift Kerja -->
+            <div class="form-group">
+                <label>Shift Kerja</label>
+                <select id="shiftKerja">
+                    <option value="Shift 1">Shift 1</option>
+                    <option value="Shift 2">Shift 2</option>
+                </select>
+            </div>
+
             <!-- Nama Mekanik -->
             <div class="form-group">
                 <label>Nama Mekanik</label>
@@ -379,10 +388,6 @@ const dataTools = [
     { no: 17, desc: "PLIER SNIPE NOSE", size: "160", qty: 1 },
     { no: 17, desc: "PLIER, ROUND LONG NOSE", size: "160", qty: 1 },
     { no: 17, desc: "DIAGONAL CUTTING NIPPER", size: "165", qty: 1 },
-    { no: 17, desc: "PLIER, CIRCLIP STRIGHT EX", size: "175", qty: 1 },
-    { no: 17, desc: "PLIER, CIRCLIP ANGLE EX", size: "165", qty: 1 },
-    { no: 17, desc: "PLIER, CIRCLIP STRIGHT IN", size: "180", qty: 1 },
-    { no: 17, desc: "PLIER CIRCLIP ANGLE IN", size: "170", qty: 1 },
     { no: 18, desc: "ALLENKEY SET", size: "2-12MM", qty: 1 },
     { no: 18, desc: "ALLENKEY SET", size: "14", qty: 1 },
     { no: 19, desc: "TORX BIT SET", size: "T9-T40", qty: "1 SET" },
@@ -452,6 +457,9 @@ function kirimKeWA() {
     // Ambil Tanggal
     const tgl = document.getElementById("tglInspeksi").value;
 
+    // Ambil Shift
+    const shift = document.getElementById("shiftKerja").value;
+
     // Ambil Nama Mekanik
     let mekanik = document.getElementById("namaMekanikSelect").value;
     if (mekanik === "CUSTOM") {
@@ -474,6 +482,7 @@ function kirimKeWA() {
     let pesan = `*LAPORAN CHECKLIST TOOLBOX*\n`;
     pesan += `-----------------------------------\n`;
     pesan += `📅 *Tanggal Update:* ${tgl}\n`;
+    pesan += `⏱️ *Shift Kerja:* ${shift}\n`;
     pesan += `📋 *Status Inspeksi:* ${waktu}\n`;
     pesan += `👤 *Nama Mekanik:* ${mekanik}\n`;
     pesan += `🧰 *No. Tool Box:* ${toolbox}\n`;

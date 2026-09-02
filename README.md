@@ -212,20 +212,19 @@
 <body>
 
 <div class="mobile-frame">
+    <!-- Header App -->
     <div class="app-header">
         <h1>TOOLBOX INSPECTOR</h1>
     </div>
 
+    <!-- Content Mobile -->
     <div class="app-content">
+        <!-- Card Informasi Mekanik -->
         <div class="mobile-card">
             <h2>Informasi Pemeriksaan</h2>
             <div class="form-group">
                 <label>Nama Mekanik</label>
                 <input type="text" id="namaMekanik" placeholder="Contoh: Ahmad">
-            </div>
-            <div class="form-group">
-                <label>NRP</label>
-                <input type="text" id="nrp" placeholder="Contoh: 12345678">
             </div>
             <div class="form-group">
                 <label>No. Tool Box</label>
@@ -240,17 +239,21 @@
             </div>
         </div>
 
+        <!-- Search Box -->
         <div class="search-box">
             <input type="text" id="searchInput" onkeyup="filterTools()" placeholder="🔍 Cari item kunci / ukuran...">
         </div>
 
+        <!-- Card List Item Tools -->
         <div class="mobile-card">
             <h2>Daftar Tools (<span id="totalItems">0</span> Item)</h2>
             <div id="toolsListMobile">
-                </div>
+                <!-- Data diisi otomatis oleh JavaScript -->
+            </div>
         </div>
     </div>
 
+    <!-- Floating Action Button di Bawah -->
     <div class="bottom-action">
         <button class="btn-wa" onclick="kirimKeWA()">
             📲 Kirim Laporan ke WA
@@ -406,12 +409,11 @@ function filterTools() {
 
 function kirimKeWA() {
     const mekanik = document.getElementById("namaMekanik").value;
-    const nrp = document.getElementById("nrp").value;
     const toolbox = document.getElementById("noToolbox").value;
     const waktu = document.getElementById("waktuPengecekan").value;
 
-    if (!mekanik || !nrp || !toolbox) {
-        alert("Mohon lengkapi Nama Mekanik, NRP, dan Nomor Tool Box terlebih dahulu!");
+    if (!mekanik || !toolbox) {
+        alert("Mohon lengkapi Nama Mekanik dan Nomor Tool Box terlebih dahulu!");
         return;
     }
 
@@ -419,7 +421,6 @@ function kirimKeWA() {
     pesan += `-----------------------------------\n`;
     pesan += `*Status:* ${waktu}\n`;
     pesan += `*Nama Mekanik:* ${mekanik}\n`;
-    pesan += `*NRP:* ${nrp}\n`;
     pesan += `*No. Tool Box:* ${toolbox}\n`;
     pesan += `-----------------------------------\n`;
     pesan += `*DETAIL KONDISI TOOLS:*\n\n`;

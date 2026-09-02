@@ -32,7 +32,7 @@
         /* Container Simulasi HP */
         .mobile-frame {
             width: 100%;
-            max-width: 414px; /* Ukuran standar Layar HP */
+            max-width: 414px;
             height: 100vh;
             max-height: 896px;
             background-color: var(--bg-app);
@@ -64,7 +64,7 @@
             flex: 1;
             overflow-y: auto;
             padding: 15px;
-            padding-bottom: 80px; /* Space untuk bottom navbar */
+            padding-bottom: 80px;
         }
 
         /* Form & Cards UI */
@@ -111,6 +111,11 @@
         .form-group input:focus, .form-group select:focus {
             border-color: var(--primary);
             background-color: #fff;
+        }
+
+        .custom-input {
+            margin-top: 8px;
+            display: none;
         }
 
         /* Quick Action Bar / Search */
@@ -168,7 +173,7 @@
             font-weight: bold;
         }
 
-        /* Floating Bottom Bar / Action */
+        /* Floating Bottom Bar */
         .bottom-action {
             position: absolute;
             bottom: 0;
@@ -219,25 +224,39 @@
 
     <!-- Content Mobile -->
     <div class="app-content">
-        <!-- Card Informasi Mekanik -->
+        <!-- Card Informasi Pemeriksaan -->
         <div class="mobile-card">
             <h2>Informasi Pemeriksaan</h2>
+            
+            <!-- Tanggal Inspeksi -->
+            <div class="form-group">
+                <label>Tanggal Update Hari Ini</label>
+                <input type="date" id="tglInspeksi">
+            </div>
+
+            <!-- Nama Mekanik -->
             <div class="form-group">
                 <label>Nama Mekanik</label>
-                <select id="NamaMekanik">
-                <option value="SUYATMO"</option>
-                    <option value="ACHMAD MIRZA"</option>
-                    <option value="ENRICO ATHA NARESWARA"</option>
+                <select id="namaMekanikSelect" onchange="toggleCustomInput('namaMekanikSelect', 'namaMekanikCustom')">
+                    <option value="SUYATMO">SUYATMO</option>
+                    <option value="ACHMAD MIRZA">ACHMAD MIRZA</option>
+                    <option value="ENRICO AGTHA NARESWARA">ENRICO AGTHA NARESWARA</option>
+                    <option value="CUSTOM">-- Lainnya (Ketik Sendiri) --</option>
                 </select>
-                <input type="text" id="namaMekanik" placeholder="Contoh: Ahmad">
+                <input type="text" id="namaMekanikCustom" class="custom-input" placeholder="Ketik nama mekanik baru...">
             </div>
+
+            <!-- Nomor Tool Box -->
             <div class="form-group">
                 <label>No. Tool Box</label>
-                <select id="ToolBo">
-                    <option value="BOX 05"</option>
+                <select id="noToolboxSelect" onchange="toggleCustomInput('noToolboxSelect', 'noToolboxCustom')">
+                    <option value="TOOLBOX 05">TOOLBOX 05</option>
+                    <option value="CUSTOM">-- Lainnya (Ketik Sendiri) --</option>
                 </select>
-                <input type="text" id="noToolbox" placeholder="Contoh: TB-01">
+                <input type="text" id="noToolboxCustom" class="custom-input" placeholder="Ketik nomor toolbox baru...">
             </div>
+
+            <!-- Waktu Inspeksi -->
             <div class="form-group">
                 <label>Status Waktu Inspeksi</label>
                 <select id="waktuPengecekan">
@@ -256,12 +275,12 @@
         <div class="mobile-card">
             <h2>Daftar Tools (<span id="totalItems">0</span> Item)</h2>
             <div id="toolsListMobile">
-                <!-- Data diisi otomatis oleh JavaScript -->
+                <!-- Data diisi otomatis oleh JS -->
             </div>
         </div>
     </div>
 
-    <!-- Floating Action Button di Bawah -->
+    <!-- Floating Action Button -->
     <div class="bottom-action">
         <button class="btn-wa" onclick="kirimKeWA()">
             📲 Kirim Laporan ke WA
@@ -270,6 +289,20 @@
 </div>
 
 <script>
+// Tanggal Hari Ini secara otomatis
+document.getElementById('tglInspeksi').valueAsDate = new Date();
+
+function toggleCustomInput(selectId, customInputId) {
+    const select = document.getElementById(selectId);
+    const customInput = document.getElementById(customInputId);
+    if (select.value === 'CUSTOM') {
+        customInput.style.display = 'block';
+        customInput.focus();
+    } else {
+        customInput.style.display = 'none';
+    }
+}
+
 const dataTools = [
     { no: 1, desc: "ADJUSTABLE WRENCH", size: "10\"", qty: 1 },
     { no: 2, desc: "OPEN END", size: "6X7", qty: 1 },
@@ -416,20 +449,34 @@ function filterTools() {
 }
 
 function kirimKeWA() {
-    const mekanik = document.getElementById("namaMekanik").value;
-    const toolbox = document.getElementById("noToolbox").value;
+    // Ambil Tanggal
+    const tgl = document.getElementById("tglInspeksi").value;
+
+    // Ambil Nama Mekanik
+    let mekanik = document.getElementById("namaMekanikSelect").value;
+    if (mekanik === "CUSTOM") {
+        mekanik = document.getElementById("namaMekanikCustom").value.trim();
+    }
+
+    // Ambil No Toolbox
+    let toolbox = document.getElementById("noToolboxSelect").value;
+    if (toolbox === "CUSTOM") {
+        toolbox = document.getElementById("noToolboxCustom").value.trim();
+    }
+
     const waktu = document.getElementById("waktuPengecekan").value;
 
-    if (!mekanik || !toolbox) {
-        alert("Mohon lengkapi Nama Mekanik dan Nomor Tool Box terlebih dahulu!");
+    if (!mekanik || !toolbox || !tgl) {
+        alert("Mohon lengkapi Tanggal, Nama Mekanik, dan Nomor Tool Box terlebih dahulu!");
         return;
     }
 
     let pesan = `*LAPORAN CHECKLIST TOOLBOX*\n`;
     pesan += `-----------------------------------\n`;
-    pesan += `*Status:* ${waktu}\n`;
-    pesan += `*Nama Mekanik:* ${mekanik}\n`;
-    pesan += `*No. Tool Box:* ${toolbox}\n`;
+    pesan += `📅 *Tanggal Update:* ${tgl}\n`;
+    pesan += `📋 *Status Inspeksi:* ${waktu}\n`;
+    pesan += `👤 *Nama Mekanik:* ${mekanik}\n`;
+    pesan += `🧰 *No. Tool Box:* ${toolbox}\n`;
     pesan += `-----------------------------------\n`;
     pesan += `*DETAIL KONDISI TOOLS:*\n\n`;
 

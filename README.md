@@ -224,6 +224,10 @@
                 <input type="text" id="namaMekanik" placeholder="Contoh: Ahmad">
             </div>
             <div class="form-group">
+                <label>NRP</label>
+                <input type="text" id="nrp" placeholder="Contoh: 12345678">
+            </div>
+            <div class="form-group">
                 <label>No. Tool Box</label>
                 <input type="text" id="noToolbox" placeholder="Contoh: TB-01">
             </div>
